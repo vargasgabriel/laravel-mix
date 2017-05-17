@@ -110,7 +110,7 @@ class Manifest {
      * Refresh the mix-manifest.js file.
      */
     refresh() {
-        let manifest = {};
+        let manifest = this.cache;
 
         for (let key in this.manifest) {
             let val = this.preparePath(this.manifest[key]);

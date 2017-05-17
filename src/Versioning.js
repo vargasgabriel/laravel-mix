@@ -84,12 +84,15 @@ class Versioning {
     prune() {
         this.writeHashedFiles().addManualFilesToManifest();
 
-        let cachedFiles = objectValues(this.manifest.cache);
-        let currentFiles = objectValues(this.manifest.get());
+        let cachedFiles = this.manifest.cache;
+        let currentFiles = this.manifest.get();
 
-        cachedFiles
-            .filter(file => ! currentFiles.includes(file))
-            .map(file => {
+        Object.keys(cachedFiles)
+            .filter(key => {
+                return Object.keys(currentFiles).includes(key) && currentFiles[key] !== cachedFiles[key]
+            })
+            .map(key => {
+                let file = cachedFiles[key];
                 return file.startsWith(global.options.publicPath)
                     ? file
                     : path.join(global.options.publicPath, file);
@@ -101,7 +104,7 @@ class Versioning {
         this.manifest.refresh();
         this.manifest.cache = this.manifest.get();
 
-        return currentFiles;
+        return objectValues(currentFiles);
     }
 }
 
